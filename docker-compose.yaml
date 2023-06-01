@@ -1,0 +1,20 @@
+version: '3'
+
+
+services:
+  redis:
+    image: redis:6.0.7
+    env_file:
+      - .env
+    ports:
+      - '6379:6379'
+    depends_on:
+      - helper
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass ${REDIS_PASSWORD}
+  helper:
+    image: alpine
+    command: sh -c "echo never > /sys/kernel/mm/transparent_hugepage/enabled;echo never > /sys/kernel/mm/transparent_hugepage/defrag"
+    privileged: true
