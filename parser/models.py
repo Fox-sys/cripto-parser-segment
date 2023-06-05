@@ -1,10 +1,26 @@
 from django.db import models
 
 
+class ApiPlaceChoices:
+    HEADER = 'header'
+    BODY = 'body'
+    LINK = 'link'
+
+    @classmethod
+    def get_choices(cls):
+        return [('header', 'header'), ('body', 'body'), ('link', 'link')]
+
+
 class Site(models.Model):
     name = models.CharField('Название сайта', max_length=150)
     is_active = models.BooleanField('Активен', default=True)
     list_api_link = models.URLField('Ссылка на список')
+    json_scheme = models.TextField('Схема обработки ответов')
+    api_key = models.CharField('Апи ключ', max_length=100)
+    api_key_field_name = models.CharField('Название поля для api ключа', max_length=100)
+    api_key_place = models.CharField('Место где хранится ключ', max_length=10, choices=ApiPlaceChoices.get_choices())
+    first_run = models.BooleanField('Первый запуск', default=True)
+    link_template = models.CharField('Шаблон ссылки', max_length=100, blank=True)
 
     class Meta:
         verbose_name = 'Сайт'
@@ -19,6 +35,10 @@ class Segment(models.Model):
     api_link = models.URLField('Ссылка на сегмент')
     is_active = models.BooleanField('Активен', default=True)
     site = models.ForeignKey('Site', on_delete=models.CASCADE)
+    api_token_place = models.CharField('Место где хранится токен', max_length=10, choices=ApiPlaceChoices.get_choices())
+    api_token_field_name = models.CharField('Название токена', max_length=100, blank=True)
+    json_scheme = models.TextField('Схема обработки ответов')
+    scheme_single_target_mode = models.BooleanField('Single target mode', default=True)
 
     class Meta:
         verbose_name = 'Сегмент'
@@ -29,7 +49,6 @@ class Pair(models.Model):
     site = models.ForeignKey('Site', on_delete=models.CASCADE)
     token = models.CharField('Индивидуальный токен валюты', max_length=100)
     sent = models.BooleanField('отправленно', default=False)
-    json_scheme = models.TextField('Схема обработки ответов')
 
     def __str__(self):
         return self.token
@@ -42,7 +61,7 @@ class Pair(models.Model):
 
 class PairSegment(models.Model):
     json_name = models.CharField('Название json поля', max_length=20)
-    content = models.TextField('json контент')
+    content = models.TextField('json контент', blank=True)
     pair = models.ForeignKey('Pair', on_delete=models.CASCADE)
 
     class Meta:

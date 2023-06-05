@@ -148,3 +148,5 @@ CELERY_RESULT_BACKEND = f'redis://:{env("REDIS_PASSWORD")}@localhost:6379/1'
 CELERY_WORKER_CONCURRENCY = (multiprocessing.cpu_count() * 2 + 1)
 CELERYD_MAX_TASKS_PER_CHILD = 10
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000000

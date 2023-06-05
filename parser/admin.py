@@ -45,7 +45,7 @@ class PairAdmin(admin.ModelAdmin):
     list_display = ('token', 'site', 'sent')
     readonly_fields = ('site', 'token', 'sent')
     list_filter = ('site', 'sent')
-    search_fields = ('pair_name',)
+    search_fields = ('token',)
     actions = (make_sent, make_unsent)
     inlines = [PairSegmentInline]
 
