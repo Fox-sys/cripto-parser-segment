@@ -59,7 +59,7 @@ def parse_segment_unloaded():
         pairs = Pair.objects.filter(segments_loaded=False).values_list('token', flat=True)[:40]
         segments = []
         for pair in pairs:
-            segments.append(parser.parse_segments(pair.token))
+            segments.append(parser.parse_segments(pair))
             time.sleep(2)
         saving_pairs = zip(pairs, segments)
         parser.save_pairs(saving_pairs)
