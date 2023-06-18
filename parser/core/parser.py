@@ -68,6 +68,7 @@ class Parser:
 
     def save_pair(self, pair, segments):
         saved_pair = models.Pair.objects.get_or_create(site=self.site, token=pair)[0]
+        saved_pair.segments_loaded = len(segments) >= self.site.segment_set.count()
         for segment in segments:
             segment_instance = models.PairSegment.objects.get_or_create(
                 pair=saved_pair,

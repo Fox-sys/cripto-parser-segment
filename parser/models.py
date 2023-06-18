@@ -49,6 +49,7 @@ class Pair(models.Model):
     site = models.ForeignKey('Site', on_delete=models.CASCADE)
     token = models.CharField('Индивидуальный токен валюты', max_length=100)
     sent = models.BooleanField('отправленно', default=False)
+    segments_loaded = models.BooleanField('Сегменты загружены', default=True)
 
     def __str__(self):
         return self.token

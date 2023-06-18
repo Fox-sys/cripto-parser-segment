@@ -1,4 +1,5 @@
 import json
+import time
 import traceback
 
 from project import celery_app
@@ -48,3 +49,18 @@ def parse_shift():
             pair.sent = True
             pair.save()
         send_file(bot.bot_token, bot.chat_id, site.name, json.dumps(js, indent=1))
+
+
+@celery_app.task
+def parse_segment_unloaded():
+    sites = Site.objects.all()
+    for site in sites:
+        parser = Parser(site)
+        pairs = Pair.objects.filter(segments_loaded=False).values_list('token', flat=True)[:40]
+        segments = []
+        saving_pairs = []
+        for pair in pairs:
+            segments.append(parser.parse_segments(pair.token))
+            time.sleep(2)
+        saving_pairs = zip(pairs, segments)
+        parser.save_pairs(saving_pairs)
