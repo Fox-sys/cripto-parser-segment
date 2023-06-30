@@ -25,30 +25,29 @@ def parse_shift():
             print(traceback.format_exc())
             send_new(bot.bot_token, bot.chat_id, content)
 
-    for site in Site.objects.filter(is_active=True):
-        js = {'site_name': site.name, 'pairs': []}
-        pairs = Pair.objects.filter(sent=False, site=site)
-        if len(pairs) == 0:
-            continue
-        bot = Bot.objects.first()
-        for pair in pairs:
-            js_pair = {'name': pair.token}
-            if site.link_template:
-                link_template = site.link_template.replace('{token}', pair.token)
-                camps = re.findall(r'{[a-zA-Z]+}', link_template)
-                for camp in camps:
-                    try:
-                        segment = pair.pairsegment_set.get(json_name=camp[1:-1])
-                    except:
-                        continue
-                    link_template = link_template.replace(camp, json.loads(segment.content))
-                js_pair['link'] = link_template
-            for segment in pair.pairsegment_set.all():
-                js_pair[segment.json_name] = json.loads(segment.content)
-            js['pairs'].append(js_pair)
-            pair.sent = True
-            pair.save()
-        send_file(bot.bot_token, bot.chat_id, site.name, json.dumps(js, indent=1))
+    js = []
+    pairs = Pair.objects.filter(sent=False, site=site)
+    if len(pairs <= 5):
+        return
+    bot = Bot.objects.first()
+    for pair in pairs:
+        js_pair = {'name': pair.token}
+        if site.link_template:
+            link_template = site.link_template.replace('{token}', pair.token)
+            camps = re.findall(r'{[a-zA-Z]+}', link_template)
+            for camp in camps:
+                try:
+                    segment = pair.pairsegment_set.get(json_name=camp[1:-1])
+                except:
+                    continue
+                link_template = link_template.replace(camp, json.loads(segment.content))
+            js_pair['link'] = link_template
+        for segment in pair.pairsegment_set.all():
+            js_pair[segment.json_name] = json.loads(segment.content)
+        js.append(js_pair)
+        pair.sent = True
+        pair.save()
+    send_file(bot.bot_token, bot.chat_id, site.name, json.dumps(js, indent=1))
 
 
 @celery_app.task
