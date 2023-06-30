@@ -46,11 +46,12 @@ class Parser:
             segment_list = []
             for pair in obj:
                 if len(models.Pair.objects.filter(site=self.site, token=pair)) == 0:
-                    segment_list.append(self.parse_segments(pair))
+                    segment = self.parse_segments(pair)
+                    segment_list.append(segment)
+                    print(segment)
                 else:
                     segment_list.append([])
 
-        print(segment_list)
         pairs = zip(obj, segment_list)
         self.save_pairs(pairs)
 
