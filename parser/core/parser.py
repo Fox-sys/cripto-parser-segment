@@ -38,6 +38,7 @@ class Parser:
     def process_response(self, response):
         scheme = self.site.json_scheme
         obj = self.processor.process(response, scheme)
+        segments_loaded = []
         if self.site.first_run:
             segment_list = [[] for i in obj]
         else:
@@ -46,10 +47,12 @@ class Parser:
                 if len(models.Pair.objects.filter(site=self.site, token=pair)) == 0:
                     segments = self.parse_segments(pair)
                     segment_list.append(segments)
+                    segments_loaded.append(True)
                 else:
                     segment_list.append([])
+                    segments_loaded.append(False)
 
-        pairs = zip(obj, segment_list)
+        pairs = zip(obj, segment_list, segments_loaded)
         self.save_pairs(pairs)
 
     def parse_segments(self, pair):
@@ -71,9 +74,9 @@ class Parser:
         for pair in pairs:
             self.save_pair(*pair)
 
-    def save_pair(self, pair, segments):
+    def save_pair(self, pair, segments, segments_loaded):
         saved_pair = models.Pair.objects.get_or_create(site=self.site, token=pair)[0]
-        saved_pair.segments_loaded = not self.site.first_run
+        saved_pair.segments_loaded = segments_loaded
         for segment in segments:
             segment_instance = models.PairSegment.objects.get_or_create(
                 pair=saved_pair,

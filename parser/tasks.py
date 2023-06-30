@@ -60,5 +60,5 @@ def parse_segment_unloaded():
         for pair in pairs:
             segments.append(parser.parse_segments(pair))
             time.sleep(2)
-        saving_pairs = zip(pairs, segments)
+        saving_pairs = zip(pairs, segments, [True for i in range(40)])
         parser.save_pairs(saving_pairs)
