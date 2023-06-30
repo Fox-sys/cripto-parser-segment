@@ -27,6 +27,7 @@ class SchemeProcessor:
             return obj
         except (KeyError, IndexError) as e:
             if token:
+                print(e)
                 return None
             raise e
 

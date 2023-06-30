@@ -46,9 +46,9 @@ class Parser:
             segment_list = []
             for pair in obj:
                 if len(models.Pair.objects.filter(site=self.site, token=pair)) == 0:
-                    segment = self.parse_segments(pair)
-                    segment_list.append(segment)
-                    print(segment)
+                    segments = self.parse_segments(pair)
+                    segment_list.append(segments)
+                    print(segments)
                 else:
                     segment_list.append([])
 
@@ -62,6 +62,7 @@ class Parser:
             segment_str = self.processor.process(
                 resource, segment.json_scheme, pair, segment.scheme_single_target_mode
             )
+            print(segment_str)
             if segment_str:
                 segments.append({'json_name': segment.json_name, 'content': json.dumps(segment_str)})
         print(2)
