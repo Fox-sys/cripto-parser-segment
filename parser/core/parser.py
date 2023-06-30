@@ -33,6 +33,7 @@ class Parser:
                 body[segment.api_token_field_name] = token
             elif segment.api_token_place == models.ApiPlaceChoices.LINK:
                 site = site.format(token=token)
+            print(1)
         return requests.get(site, data=body, headers=headers, params=params).json()
 
     def process_response(self, response):
@@ -60,6 +61,7 @@ class Parser:
             )
             if segment_str:
                 segments.append({'json_name': segment.json_name, 'content': json.dumps(segment_str)})
+        print(2)
         return segments
 
     def parse_site(self):
@@ -71,6 +73,7 @@ class Parser:
             self.save_pair(*pair)
 
     def save_pair(self, pair, segments):
+        print(segments)
         saved_pair = models.Pair.objects.get_or_create(site=self.site, token=pair)[0]
         saved_pair.segments_loaded = len(segments) >= self.site.segment_set.count()
         for segment in segments:
