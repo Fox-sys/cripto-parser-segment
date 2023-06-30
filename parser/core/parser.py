@@ -38,7 +38,6 @@ class Parser:
     def process_response(self, response):
         scheme = self.site.json_scheme
         obj = self.processor.process(response, scheme)
-        # print(obj)
         if self.site.first_run:
             segment_list = [[] for i in obj]
         else:
@@ -74,7 +73,7 @@ class Parser:
 
     def save_pair(self, pair, segments):
         saved_pair = models.Pair.objects.get_or_create(site=self.site, token=pair)[0]
-        saved_pair.segments_loaded = len(segments) >= self.site.segment_set.count()
+        saved_pair.segments_loaded = not self.site.first_run
         for segment in segments:
             segment_instance = models.PairSegment.objects.get_or_create(
                 pair=saved_pair,
