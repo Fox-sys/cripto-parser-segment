@@ -7,6 +7,7 @@ class SchemeProcessor:
             target_type = None
             scheme = scheme.replace(' ', '')
             path_to_list = ''
+            print(1)
             if not single_target_mode:
                 scheme = scheme.split('\n')[:2]
                 if len(scheme) != 1:
@@ -15,6 +16,7 @@ class SchemeProcessor:
                 path_to_object_name = path_to_object_name.split('->')
             else:
                 path_to_list = scheme.replace('\r', '').replace('\n', '').split('->')
+            print(2)
             obj = response
             if path_to_list != '':
                 for step in path_to_list:
@@ -22,12 +24,12 @@ class SchemeProcessor:
                         obj = obj[step.replace('{token}', str(token)) if token else step]
                     except TypeError:
                         obj = obj[int(step)]
+                    print(obj)
             if target_type == 'dict' and not single_target_mode:
                 obj = self.dict_post_process(obj, path_to_object_name)
             return obj
         except (KeyError, IndexError) as e:
             if token:
-                print(e)
                 return None
             raise e
 
