@@ -24,7 +24,8 @@ class SchemeProcessor:
                         obj = obj[step.replace('{token}', str(token)) if token else step]
                     except TypeError:
                         obj = obj[int(step)]
-                    print(obj)
+                    if token == 'zzz':
+                        print(obj)
             if target_type == 'dict' and not single_target_mode:
                 obj = self.dict_post_process(obj, path_to_object_name)
             return obj
