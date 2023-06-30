@@ -4,11 +4,12 @@ from django.db import models
 class ApiPlaceChoices:
     HEADER = 'header'
     BODY = 'body'
+    PARAM = 'param'
     LINK = 'link'
 
     @classmethod
     def get_choices(cls):
-        return [('header', 'header'), ('body', 'body'), ('link', 'link')]
+        return [('header', 'header'), ('body', 'body'), ('param', 'param'), ('link', 'link')]
 
 
 class Site(models.Model):

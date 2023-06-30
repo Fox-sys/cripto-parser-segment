@@ -16,19 +16,23 @@ class Parser:
         body = {}
         params = {}
         if self.site.api_key:
-            if self.site.api_key_place == models.ApiPlaceChoices.LINK:
+            if self.site.api_key_place == models.ApiPlaceChoices.PARAM:
                 params[self.site.api_key_field_name] = self.site.api_key
             elif self.site.api_key_place == models.ApiPlaceChoices.BODY:
                 body[self.site.api_key_field_name] = self.site.api_key
             elif self.site.api_key_place == models.ApiPlaceChoices.HEADER:
                 headers[self.site.api_key_field_name] = self.site.api_key
+            elif self.site.api_key_place == models.ApiPlaceChoices.LINK:
+                site = site.format(token=token)
         if segment and token:
-            if segment.api_token_place == models.ApiPlaceChoices.LINK:
+            if segment.api_token_place == models.ApiPlaceChoices.PARAM:
                 params[segment.api_token_field_name] = token
             elif segment.api_token_place == models.ApiPlaceChoices.HEADER:
                 headers[segment.api_token_field_name] = token
             elif segment.api_token_place == models.ApiPlaceChoices.BODY:
                 body[segment.api_token_field_name] = token
+            elif segment.api_token_place == models.ApiPlaceChoices.LINK:
+                site = site.format(token=token)
         return requests.get(site, data=body, headers=headers, params=params).json()
 
     def process_response(self, response):
