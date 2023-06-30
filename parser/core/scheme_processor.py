@@ -18,14 +18,15 @@ class SchemeProcessor:
                 path_to_list = scheme.replace('\r', '').replace('\n', '').split('->')
             print(2)
             obj = response
+            print(path_to_list)
             if path_to_list != '':
                 for step in path_to_list:
+                    if token == 'zzz':
+                        print(obj)
                     try:
                         obj = obj[step.replace('{token}', str(token)) if token else step]
                     except TypeError:
                         obj = obj[int(step)]
-                    if token == 'zzz':
-                        print(obj)
             if target_type == 'dict' and not single_target_mode:
                 obj = self.dict_post_process(obj, path_to_object_name)
             return obj
