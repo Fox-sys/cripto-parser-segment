@@ -49,6 +49,8 @@ class Parser:
                     segment_list.append(self.parse_segments(pair))
                 else:
                     segment_list.append([])
+
+        print(segment_list)
         pairs = zip(obj, segment_list)
         self.save_pairs(pairs)
 
@@ -73,7 +75,6 @@ class Parser:
             self.save_pair(*pair)
 
     def save_pair(self, pair, segments):
-        print(segments)
         saved_pair = models.Pair.objects.get_or_create(site=self.site, token=pair)[0]
         saved_pair.segments_loaded = len(segments) >= self.site.segment_set.count()
         for segment in segments:
