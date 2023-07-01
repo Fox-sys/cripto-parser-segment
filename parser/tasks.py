@@ -27,7 +27,7 @@ def parse_shift():
 
     js = []
     pairs = Pair.objects.filter(sent=False, site=site)
-    if len(pairs <= 5):
+    if len(pairs) <= 5:
         return
     bot = Bot.objects.first()
     for pair in pairs:
