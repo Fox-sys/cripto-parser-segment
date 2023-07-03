@@ -26,14 +26,14 @@ def parse_shift():
             send_new(bot.bot_token, bot.chat_id, content)
 
     js = []
-    pairs = Pair.objects.filter(sent=False, site=site)
+    pairs = Pair.objects.filter(sent=False)
     if len(pairs) <= 15:
         return
     bot = Bot.objects.first()
     for pair in pairs:
         js_pair = {'name': pair.token}
-        if site.link_template:
-            link_template = site.link_template.replace('{token}', pair.token)
+        if pair.site.link_template:
+            link_template = pair.site.link_template.replace('{token}', pair.token)
             camps = re.findall(r'{[a-zA-Z]+}', link_template)
             for camp in camps:
                 try:
@@ -47,7 +47,7 @@ def parse_shift():
         js.append(js_pair)
         pair.sent = True
         pair.save()
-    send_file(bot.bot_token, bot.chat_id, site.name, json.dumps(js, indent=1))
+    send_file(bot.bot_token, bot.chat_id, json.dumps(js, indent=1))
 
 
 @celery_app.task
