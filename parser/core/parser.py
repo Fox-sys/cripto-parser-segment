@@ -59,6 +59,7 @@ class Parser:
         self.save_pairs(pairs)
 
     def parse_segments(self, pair):
+        time.sleep(2)
         segments = []
         for segment in self.site.segment_set.filter(is_active=True):
             resource = self.send_request(segment.api_link, segment, pair)
