@@ -40,7 +40,6 @@ class Parser:
         try:
             obj = self.processor.process(response, scheme)
         except KeyError as e:
-            print(response)
             raise e
         segments_loaded = []
         if self.site.first_run:
@@ -62,6 +61,7 @@ class Parser:
     def parse_segments(self, pair):
         segments = []
         for segment in self.site.segment_set.filter(is_active=True):
+            print(segment.json_name)
             resource = self.send_request(segment.api_link, segment, pair)
             segment_str = self.processor.process(
                 resource, segment.json_scheme, pair, segment.scheme_single_target_mode
