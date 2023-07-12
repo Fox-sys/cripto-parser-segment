@@ -37,7 +37,10 @@ class Parser:
 
     def process_response(self, response):
         scheme = self.site.json_scheme
-        obj = self.processor.process(response, scheme)
+        try:
+            obj = self.processor.process(response, scheme)
+        except KeyError:
+            print(response)
         segments_loaded = []
         if self.site.first_run:
             segment_list = [[] for i in obj]
