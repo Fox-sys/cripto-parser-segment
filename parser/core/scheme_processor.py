@@ -7,7 +7,6 @@ class SchemeProcessor:
             target_type = None
             scheme = scheme.replace(' ', '')
             path_to_list = ''
-            print(1)
             if not single_target_mode:
                 scheme = scheme.split('\n')[:2]
                 if len(scheme) != 1:
@@ -25,6 +24,7 @@ class SchemeProcessor:
                         obj = obj[int(step)]
             if target_type == 'dict' and not single_target_mode:
                 obj = self.dict_post_process(obj, path_to_object_name)
+            print(obj)
             return obj
         except (KeyError, IndexError) as e:
             if token:

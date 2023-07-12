@@ -39,8 +39,9 @@ class Parser:
         scheme = self.site.json_scheme
         try:
             obj = self.processor.process(response, scheme)
-        except KeyError:
+        except KeyError as e:
             print(response)
+            raise e
         segments_loaded = []
         if self.site.first_run:
             segment_list = [[] for i in obj]
