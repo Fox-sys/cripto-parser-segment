@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from project.file_savers.file_convertor.txt_to_json import txt_to_json_file_saver
 import json
+from django.utils.safestring import mark_safe
 
 
 class TxtToJson(models.Model):
@@ -9,7 +10,7 @@ class TxtToJson(models.Model):
     output_file = models.FileField(upload_to=txt_to_json_file_saver, blank=True, null=True)
 
     def __str__(self):
-        return f'конвертация №{self.id}'
+        return f'Конвертация №{self.id}'
 
     class Meta:
         verbose_name = 'Txt -> json'
@@ -31,3 +32,9 @@ class TxtToJson(models.Model):
             json.dump(output, file)
         self.output_file = output_path
         return super().save(**kwargs)
+
+    def output_file_download(self):
+        return mark_safe('<a href="/media/{0}" download>{1}</a>'.format(
+            self.output_file, self.output_file.path.split('/')[-1]))
+
+    output_file_download.short_description = 'Download output_file'
