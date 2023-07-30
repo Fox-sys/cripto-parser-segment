@@ -29,7 +29,7 @@ class TxtToJson(models.Model):
         output_path = txt_to_json_file_saver(self, self.input_file.path.split('/')[-1] + '.json')
         print(output_path)
         with open(settings.BASE_DIR / 'media' / output_path, 'w') as file:
-            json.dump(output, file)
+            json.dump(output, file, indent=4)
         self.output_file = output_path
         return super().save(**kwargs)
 
