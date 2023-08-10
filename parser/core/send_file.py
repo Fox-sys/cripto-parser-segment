@@ -1,9 +1,9 @@
 import requests
 
 
-def send_file(bot_token, chat_id, content: str):
+def send_file(title, bot_token, chat_id, content: str):
     requests.post(
-        f'https://api.telegram.org/bot{bot_token}/sendDocument?chat_id={chat_id}&caption=Новые%20пары',
+        f'https://api.telegram.org/bot{bot_token}/sendDocument?chat_id={chat_id}&caption={title}',
         files={'document': content.encode()})
 
 

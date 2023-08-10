@@ -24,7 +24,26 @@ def parse_shift():
             content = f'Что то поломалось, время звать Бориса (сайт: {site.name})'
             print(traceback.format_exc())
             send_new(bot.bot_token, bot.chat_id, content)
+    send_pairs('Новые%20пары')
 
+
+@celery_app.task
+def parse_segment_unloaded():
+    sites = Site.objects.all()
+    for site in sites:
+        parser = Parser(site)
+        pairs = Pair.objects.filter(segments_loaded=False, site=site).values_list('token', flat=True)[:40]
+        segments = []
+        for pair in pairs:
+            segments_pair = parser.parse_segments(pair)
+            segments.append(segments_pair)
+            time.sleep(2)
+        saving_pairs = zip(pairs, segments, [True for i in range(40)])
+        parser.save_pairs(saving_pairs)
+    send_pairs('Старые%20пары')
+
+
+def send_pairs(title):
     js = []
     pairs = Pair.objects.filter(sent=False)
     if len(pairs) <= 15:
@@ -47,21 +66,4 @@ def parse_shift():
         js.append(js_pair)
         pair.sent = True
         pair.save()
-    send_file(bot.bot_token, bot.chat_id, json.dumps(js, indent=1))
-
-
-@celery_app.task
-def parse_segment_unloaded():
-    sites = Site.objects.all()
-    for site in sites:
-        parser = Parser(site)
-        pairs = Pair.objects.filter(segments_loaded=False, site=site).values_list('token', flat=True)[:40]
-        segments = []
-        for pair in pairs:
-            segments_pair = parser.parse_segments(pair)
-            print(pair)
-            print(segments_pair)
-            segments.append(segments_pair)
-            time.sleep(2)
-        saving_pairs = zip(pairs, segments, [True for i in range(40)])
-        parser.save_pairs(saving_pairs)
+    send_file(title, bot.bot_token, bot.chat_id, json.dumps(js, indent=1))
