@@ -81,18 +81,17 @@ class Parser:
     def save_pair(self, pair, segments, segments_loaded):
         saved_pair = models.Pair.objects.get_or_create(site=self.site, token=pair)[0]
         saved_pair.segments_loaded = segments_loaded
-        print(f'{saved_pair.segments_loaded}, {saved_pair.sent}, {saved_pair.token}, {saved_pair.pairsegment_set.all()}')
-        print(f'{pair}, {segments}, {segments_loaded}')
         for segment in segments:
             segment_instance = models.PairSegment.objects.get_or_create(
                 pair=saved_pair,
                 json_name=segment['json_name']
             )[0]
+            print(segment['content'])
             if segment_instance.content != segment['content']:
+                print(1)
                 saved_pair.sent = False
                 segment_instance.content = segment['content']
             segment_instance.save()
         saved_pair.save()
-        print(f'{saved_pair.segments_loaded}, {saved_pair.sent}, {saved_pair.token}, {saved_pair.pairsegment_set.all()}')
         self.site.first_run = False
         self.site.save()
