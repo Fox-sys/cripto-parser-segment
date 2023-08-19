@@ -32,7 +32,7 @@ def parse_segment_unloaded():
     sites = Site.objects.all()
     for site in sites:
         parser = Parser(site)
-        pairs = Pair.objects.filter(segments_loaded=False, site=site).values_list('token', flat=True)[:1]
+        pairs = Pair.objects.filter(segments_loaded=False, site=site).values_list('token', flat=True)[:40]
         print(pairs)
         segments = []
         for pair in pairs:
