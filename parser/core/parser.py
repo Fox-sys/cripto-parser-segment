@@ -82,6 +82,7 @@ class Parser:
         saved_pair = models.Pair.objects.get_or_create(site=self.site, token=pair)[0]
         saved_pair.segments_loaded = segments_loaded
         print(pair, segments, segments_loaded)
+        print(saved_pair.segments_loaded, saved_pair.sent, saved_pair.token, saved_pair.pairsegment_set.all())
         for segment in segments:
             segment_instance = models.PairSegment.objects.get_or_create(
                 pair=saved_pair,
@@ -92,5 +93,6 @@ class Parser:
                 segment_instance.content = segment['content']
             segment_instance.save()
         saved_pair.save()
+        print(saved_pair.segments_loaded, saved_pair.sent, saved_pair.token, saved_pair.pairsegment_set.all())
         self.site.first_run = False
         self.site.save()
