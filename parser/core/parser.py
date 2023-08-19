@@ -86,7 +86,7 @@ class Parser:
                 pair=saved_pair,
                 json_name=segment['json_name']
             )[0]
-            print(segment['content'])
+            print(segment['content'], segment['content'])
             if segment_instance.content != segment['content']:
                 print(1)
                 saved_pair.sent = False
