@@ -67,4 +67,20 @@ def send_pairs(title):
         js.append(js_pair)
         pair.sent = True
         pair.save()
+    links = []
+    result = []
+    for obj in js:
+        try:
+            if isinstance(obj['telegram_link'], list):
+                for link in obj['telegram_link']:
+                    if 't.me' in link:
+                        obj['telegram_link'] = link
+                        break
+            if not ('t.me' in obj['telegram_link']):
+                obj['telegram_link'] = f'https://t.me/{obj["telegram_link"]}'
+            if not (obj['telegram_link'] in links):
+                result.append(obj)
+                links.append(obj['telegram_link'])
+        except:
+            ...
     send_file(title, bot.bot_token, bot.chat_id, json.dumps(js, indent=1))
