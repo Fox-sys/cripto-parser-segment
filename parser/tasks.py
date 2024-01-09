@@ -83,4 +83,4 @@ def send_pairs(title):
                 links.append(obj['telegram_link'])
         except:
             ...
-    send_file(title, bot.bot_token, bot.chat_id, json.dumps(js, indent=1))
+    send_file(title, bot.bot_token, bot.chat_id, json.dumps(result, indent=1))
