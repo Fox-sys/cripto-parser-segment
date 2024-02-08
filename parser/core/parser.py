@@ -2,8 +2,8 @@ import json
 import time
 
 from parser import models
-import requests
 from .scheme_processor import SchemeProcessor
+from requests.api import request
 
 
 class Parser:
@@ -33,7 +33,7 @@ class Parser:
                 body[segment.api_token_field_name] = token
             elif segment.api_token_place == models.ApiPlaceChoices.LINK:
                 site = site.format(token=token)
-        return requests.get(site, data=body, headers=headers, params=params).json()
+        return request(self.site.method, site, data=body, headers=headers, params=params).json()
 
     def process_response(self, response):
         scheme = self.site.json_scheme

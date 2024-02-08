@@ -2,7 +2,7 @@ class SchemeProcessor:
     def __int__(self):
         pass
 
-    def process(self, response, scheme, token=None, single_target_mode=False):
+    def process(self, response: dict, scheme, token=None, single_target_mode=False):
         try:
             target_type = None
             scheme = scheme.replace(' ', '')
@@ -22,8 +22,12 @@ class SchemeProcessor:
                         obj = obj[step.replace('{token}', str(token)) if token else step]
                     except TypeError:
                         obj = obj[int(step)]
-            if target_type == 'dict' and not single_target_mode:
+            if single_target_mode:
+                return obj
+            if target_type == 'dict':
                 obj = self.dict_post_process(obj, path_to_object_name)
+            if target_type == 'key':
+                obj = list(obj.keys())
             return obj
         except (KeyError, IndexError) as e:
             if token:

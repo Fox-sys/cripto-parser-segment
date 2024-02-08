@@ -12,6 +12,15 @@ class ApiPlaceChoices:
         return [('header', 'header'), ('body', 'body'), ('param', 'param'), ('link', 'link')]
 
 
+class MethodChoices:
+    GET = 'get'
+    POST = 'post'
+
+    @classmethod
+    def get_choices(cls):
+        return [(cls.GET, cls.GET), (cls.POST, cls.POST)]
+
+
 class Site(models.Model):
     name = models.CharField('Название сайта', max_length=150)
     is_active = models.BooleanField('Активен', default=True)
@@ -22,6 +31,8 @@ class Site(models.Model):
     api_key_place = models.CharField('Место где хранится ключ', max_length=10, choices=ApiPlaceChoices.get_choices())
     first_run = models.BooleanField('Первый запуск', default=True)
     link_template = models.CharField('Шаблон ссылки', max_length=100, blank=True)
+    method = models.CharField('Метод запроса', max_length=10, choices=MethodChoices.get_choices(),
+                              default=MethodChoices.GET)
 
     class Meta:
         verbose_name = 'Сайт'
