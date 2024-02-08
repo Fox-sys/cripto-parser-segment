@@ -1,6 +1,8 @@
 import json
 import time
 
+from requests import JSONDecodeError
+
 from parser import models
 from .scheme_processor import SchemeProcessor
 from requests.api import request
@@ -33,7 +35,12 @@ class Parser:
                 body[segment.api_token_field_name] = token
             elif segment.api_token_place == models.ApiPlaceChoices.LINK:
                 site = site.format(token=token)
-        return request(self.site.method, site, data=body, headers=headers, params=params).json()
+        try:
+            return request(self.site.method, site, data=body, headers=headers, params=params).json()
+        except JSONDecodeError as e:
+            print(self.site.name, e)
+            return {}
+
 
     def process_response(self, response):
         scheme = self.site.json_scheme
