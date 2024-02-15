@@ -48,8 +48,6 @@ class Parser:
     def process_response(self, response):
         scheme = self.site.json_scheme
         obj = self.processor.process(response, scheme)
-        if self.site.name == 'coinstats':
-            print(obj)
         segments_loaded = []
         if self.site.first_run:
             segment_list = [[] for i in obj]
@@ -84,9 +82,9 @@ class Parser:
         self.process_response(response)
 
     def save_pairs(self, pairs):
-        if self.site.name == 'coinstats':
-            print(list(pairs))
         for pair in pairs:
+            if self.site.name == 'coinstats':
+                print(1)
             self.save_pair(*pair)
 
     def save_pair(self, pair, segments, segments_loaded):
