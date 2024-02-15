@@ -53,6 +53,7 @@ class Parser:
         segments_loaded = []
         if self.site.first_run:
             segment_list = [[] for i in obj]
+            segments_loaded = [False for i in obj]
         else:
             segment_list = []
             for pair in obj:
