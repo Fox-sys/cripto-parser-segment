@@ -35,19 +35,20 @@ class Parser:
                 body[segment.api_token_field_name] = token
             elif segment.api_token_place == models.ApiPlaceChoices.LINK:
                 site = site.format(token=token)
+
         try:
-            return request(self.site.method, site, data=body, headers=headers, params=params).json()
+            response = request(self.site.method, site, data=body, headers=headers, params=params).json()
+            if self.site.name == "coinstats":
+                print(site.name)
+                print(response)
+            return response
         except JSONDecodeError as e:
             print(self.site.name, e)
             return {}
 
-
     def process_response(self, response):
         scheme = self.site.json_scheme
-        try:
-            obj = self.processor.process(response, scheme)
-        except KeyError as e:
-            raise e
+        obj = self.processor.process(response, scheme)
         segments_loaded = []
         if self.site.first_run:
             segment_list = [[] for i in obj]
@@ -82,6 +83,8 @@ class Parser:
         self.process_response(response)
 
     def save_pairs(self, pairs):
+        if self.site.name == 'coinstats':
+            print(pairs)
         for pair in pairs:
             self.save_pair(*pair)
 
@@ -93,9 +96,7 @@ class Parser:
                 pair=saved_pair,
                 json_name=segment['json_name']
             )[0]
-            print(f'{segment["content"]}, {segment["content"]}')
             if segment_instance.content != segment['content']:
-                print(1)
                 saved_pair.sent = False
                 segment_instance.content = segment['content']
             segment_instance.save()
