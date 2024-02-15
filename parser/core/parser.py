@@ -39,7 +39,7 @@ class Parser:
         try:
             response = request(self.site.method, site, data=body, headers=headers, params=params).json()
             if self.site.name == "coinstats":
-                print(site.name)
+                print(self.site.name)
                 print(response)
             return response
         except JSONDecodeError as e:
