@@ -82,11 +82,13 @@ class Parser:
         self.process_response(response)
 
     def save_pairs(self, pairs):
+        if self.site.name == 'coinstats':
+            print(list(pairs))
         for pair in pairs:
             self.save_pair(*pair)
 
     def save_pair(self, pair, segments, segments_loaded):
-        if self.site == 'coinstats':
+        if self.site.name == 'coinstats':
             print(pair)
         saved_pair = models.Pair.objects.get_or_create(site=self.site, token=pair)[0]
         saved_pair.segments_loaded = segments_loaded
