@@ -30,6 +30,7 @@ class SchemeProcessor:
                 obj = list(obj.keys())
             return obj
         except (KeyError, IndexError) as e:
+            print(e)
             if token:
                 return None
             raise e
